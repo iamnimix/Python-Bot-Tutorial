@@ -3,6 +3,7 @@ import json
 import os
 import logging
 from dotenv import load_dotenv
+from telebot.types import ReplyKeyboardMarkup, KeyboardButton
 
 
 load_dotenv()
@@ -48,6 +49,25 @@ def assign_first_name(message):
 def assign_last_name(message, first_name):
     last_name = message.text
     bot.send_message(message.chat.id, f"Welcome {first_name} {last_name} to bot")
+
+
+@bot.message_handler(commands=['options'])
+def send_options(message):
+    markup = ReplyKeyboardMarkup(resize_keyboard=True, input_field_placeholder='Choose options:', one_time_keyboard=True)
+    markup.add('About')
+    markup.add(KeyboardButton('Send username'), 'Hello')
+
+    bot.send_message(message.chat.id, 'These options can help you >>', reply_markup=markup)
+
+
+@bot.message_handler(func=lambda message: message.text == 'About')
+def send_about(message):
+    bot.reply_to(message, "This is Iamnimix Bot!")
+
+
+@bot.message_handler(func=lambda message: message.text == 'Send username')
+def send_about(message):
+    bot.reply_to(message, bot.get_me().username)
 
 
 @bot.message_handler(func=lambda message: message.content_type == 'text')
