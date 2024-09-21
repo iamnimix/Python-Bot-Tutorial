@@ -33,6 +33,23 @@ def say_hello(message):
     bot.reply_to(message, 'Hello :)')
 
 
+@bot.message_handler(commands=['setname'])
+def set_name(message):
+    bot.reply_to(message, 'What is your first name?')
+    bot.register_next_step_handler(message, assign_first_name)
+
+
+def assign_first_name(message):
+    first_name = message.text
+    bot.send_message(message.chat.id, 'What is your last name?')
+    bot.register_next_step_handler(message, assign_last_name, first_name)
+
+
+def assign_last_name(message, first_name):
+    last_name = message.text
+    bot.send_message(message.chat.id, f"Welcome {first_name} {last_name} to bot")
+
+
 @bot.message_handler(func=lambda message: message.content_type == 'text')
 def handle_text(message):
     bot.send_message(message.chat.id, message.chat.username)
