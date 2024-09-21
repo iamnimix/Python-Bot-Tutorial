@@ -1,6 +1,7 @@
 import telebot
 import json
 import os
+import logging
 from dotenv import load_dotenv
 
 
@@ -8,6 +9,8 @@ load_dotenv()
 
 API_TOKEN = os.environ.get("API_TOKEN")
 bot = telebot.TeleBot(API_TOKEN)
+logger = telebot.logger
+telebot.logger.setLevel(logging.INFO)
 
 
 @bot.message_handler(commands=['help', 'start'])
@@ -26,6 +29,7 @@ def check_doc_audio(message):
 
 @bot.message_handler(regexp=r'^Hello$')
 def say_hello(message):
+    logger.info('hello message!!!')
     bot.reply_to(message, 'Hello :)')
 
 
